@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <script src="gtag.js"></script> -->
+    <title>QuickSearch<sup>+</sup></title>
+    <link rel="stylesheet" href="popup.css" />
+    <link rel="stylesheet" href="style_modules/effects.css" />
+    <!-- <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    /> -->
+  </head>
+  <body style="height: 400px">
+    <div class="layout">
+      <header>
+        <div class="logoHolder">
+          <!-- <img src="icons/main-logo.png" alt="logo" class="logoImg" /> -->
+        </div>
+        <div class="gptProfileHolder">
+          <div class="gpt__switch-cont gptImg">
+            <label class="switch">
+              <input type="checkbox" id="toggle-switch" />
+              <span class="slider"></span>
+            </label>
+            <span>GPT</span>
+          </div>
+        </div>
+        <div class="profile__cont show__profile">
+          <i class="fa-regular fa-user fa-user show__profile"></i>
+          <i class="fa-solid fa-caret-down show__profile"></i>
+        </div>
+        <!-- Profile drop down -->
+        <div id="profileMenu" class="showdropdown">
+          <div class="profileDropdown">
+            <div class="profileHolder">
+              <i class="fa-regular fa-user icon__g"></i>
+              <span class="profileText">Profile</span>
+            </div>
+            <div class="dashboardHolder">
+              <i class="fa-solid fa-gauge icon__g"></i>
+              <span class="dashboardText">Dashboard</span>
+            </div>
+            <div class="shareHolder">
+              <i class="fa-solid fa-share-nodes icon__g"></i>
+              <span class="shareText">Share</span>
+            </div>
+            <div class="authenticationHolder">
+              <i
+                class="fa-solid fa-arrow-right-to-bracket"
+                style="color: #034aa6; font-size: 14px"
+              ></i>
+              <span class="authenticateText">Signin</span>
+            </div>
+            <!-- <div class="logoutHolder">
+              <i class="fa-solid fa-arrow-right-from-bracket icon__g"></i>
+              <span class="logoutText">Logout</span>
+            </div> -->
+          </div>
+        </div>
+      </header>
+      <!-- Backdrop -->
+      <div class="backdrop" id="backdrop"></div>
+
+      <!-- Modal -->
+      <div id="modal" class="shareModal">
+        <div class="socialContainer">
+          <span class="shareTitle">Share</span>
+          <div class="socialsImgHolder">
+            <a href="http://facebook.com">
+              <i class="fa-brands fa-x-twitter icon__g"></i>
+            </a>
+
+            <a href="http://facebook.com">
+              <i class="fa-brands fa-facebook icon__g"></i>
+            </a>
+            <a href="http://facebook.com">
+              <i class="fa-brands fa-whatsapp icon__g"></i>
+            </a>
+            <a href="http://facebook.com">
+              <i class="fa-brands fa-linkedin icon__g"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Authentication Modal -->
+      <div class="authenticationModal">
+        <div class="authenticationContainer">
+          <div class="authenticationTitleHolder">
+            <button type="button" class="authenticationTitle">
+              Login with Google
+            </button>
+            <span>OR</span>
+          </div>
+          <div class="authenticationEmailPassword">
+            <input
+              type="email"
+              placeholder="Email"
+              class="authenticationEmailPasswordInput"
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              class="authenticationEmailPasswordPassword"
+            />
+            <div class="authenticationEmailPasswordActHolder">
+              <button type="button" class="authenticationEmailPasswordLogin">
+                Login
+              </button>
+              <button type="button" class="authenticationEmailPasswordSignup">
+                Signup
+              </button>
+              <div class="registerOption">
+                <span class="registerOptionLabel">Don't have an account? </span>
+                <span class="registerOptionText">Sign up now </span>
+              </div>
+              <div class="loginOption">
+                <span class="loginOptionLabel">Already have an account? </span>
+                <span class="loginOptionText">Login </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Container -->
+      <div class="mainContainer">
+        <div class="action_container">
+          <div class="inputHolder">
+            <!-- search input  -->
+            <input
+              type="text"
+              id="google-search-input"
+              placeholder="Search the web..."
+            />
+            <button class="search-btn ripple-button" id="submite">
+              <i class="fa-solid fa-magnifying-glass google__search"></i>
+              <span class="load__spinner">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1em"
+                  height="1em"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M12 2A10 10 0 1 0 22 12A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8A8 8 0 0 1 12 20Z"
+                    opacity="0.5"
+                  />
+                  <path
+                    fill="currentColor"
+                    d="M20 12h2A10 10 0 0 0 12 2V4A8 8 0 0 1 20 12Z"
+                  >
+                    <animateTransform
+                      attributeName="transform"
+                      dur="1s"
+                      from="0 12 12"
+                      repeatCount="indefinite"
+                      to="360 12 12"
+                      type="rotate"
+                    />
+                  </path>
+                </svg>
+              </span>
+            </button>
+          </div>
+
+          <div class="saveTabsFavouriteHolder">
+            <div class="saveTabsHolder">
+              <span id="tab-btn">
+                <svg
+                  width="35"
+                  height="32"
+                  viewBox="0 0 35 32"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 5C0 3.67392 0.566293 2.40215 1.5743 1.46447C2.58231 0.526784 3.94946 0 5.375 0H24.725C26.1505 0 27.5177 0.526784 28.5257 1.46447C29.5337 2.40215 30.1 3.67392 30.1 5V13.2C29.084 12.716 27.9976 12.3723 26.875 12.18V5C26.875 4.46957 26.6485 3.96086 26.2453 3.58579C25.8421 3.21071 25.2952 3 24.725 3H5.375C4.80478 3 4.25792 3.21071 3.85472 3.58579C3.45152 3.96086 3.225 4.46957 3.225 5V23C3.225 23.5304 3.45152 24.0391 3.85472 24.4142C4.25792 24.7893 4.80478 25 5.375 25H13.0935C13.3003 26.0443 13.6696 27.0549 14.19 28H5.375C3.94946 28 2.58231 27.4732 1.5743 26.5355C0.566293 25.5979 0 24.3261 0 23V5ZM34.4 23C34.4 25.3869 33.3807 27.6761 31.5663 29.364C29.7518 31.0518 27.291 32 24.725 32C22.159 32 19.6982 31.0518 17.8837 29.364C16.0693 27.6761 15.05 25.3869 15.05 23C15.05 20.6131 16.0693 18.3239 17.8837 16.636C19.6982 14.9482 22.159 14 24.725 14C27.291 14 29.7518 14.9482 31.5663 16.636C33.3807 18.3239 34.4 20.6131 34.4 23ZM25.8 19C25.8 18.7348 25.6867 18.4804 25.4851 18.2929C25.2835 18.1054 25.0101 18 24.725 18C24.4399 18 24.1665 18.1054 23.9649 18.2929C23.7633 18.4804 23.65 18.7348 23.65 19V22H20.425C20.1399 22 19.8665 22.1054 19.6649 22.2929C19.4633 22.4804 19.35 22.7348 19.35 23C19.35 23.2652 19.4633 23.5196 19.6649 23.7071C19.8665 23.8946 20.1399 24 20.425 24H23.65V27C23.65 27.2652 23.7633 27.5196 23.9649 27.7071C24.1665 27.8946 24.4399 28 24.725 28C25.0101 28 25.2835 27.8946 25.4851 27.7071C25.6867 27.5196 25.8 27.2652 25.8 27V24H29.025C29.3101 24 29.5835 23.8946 29.7851 23.7071C29.9867 23.5196 30.1 23.2652 30.1 23C30.1 22.7348 29.9867 22.4804 29.7851 22.2929C29.5835 22.1054 29.3101 22 29.025 22H25.8V19Z"
+                    fill="url(#paint0_linear_121_105)"
+                  />
+                  <defs>
+                    <linearGradient
+                      id="paint0_linear_121_105"
+                      x1="17.2"
+                      y1="0"
+                      x2="17.2"
+                      y2="32"
+                      gradientUnits="userSpaceOnUse"
+                    >
+                      <stop stop-color="#034AA6" />
+                      <stop offset="1" stop-color="#3F88DD" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </span>
+              <span class="saveTab">save tab</span>
+            </div>
+            <div class="tabsHolder">
+              <span id="save-all-tabs">
+                <svg
+                  width="35"
+                  height="32"
+                  viewBox="0 0 35 32"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M7.08235 0C5.74067 0 4.45394 0.495797 3.50522 1.37832C2.55651 2.26085 2.02353 3.4578 2.02353 4.70588V15.5426C2.64772 15.0632 3.32624 14.6485 4.04706 14.3059V4.70588C4.04706 3.95704 4.36685 3.23886 4.93608 2.70935C5.5053 2.17983 6.27734 1.88235 7.08235 1.88235H10.1176V4.70588C10.1176 5.45473 10.4374 6.1729 11.0067 6.70242C11.5759 7.23193 12.3479 7.52941 13.1529 7.52941H26.3059V19.7647C26.3059 20.5136 25.9861 21.2317 25.4169 21.7612C24.8476 22.2908 24.0756 22.5882 23.2706 22.5882H20.1908C20.2513 23.2144 20.2513 23.8444 20.1908 24.4706H23.2706C24.6123 24.4706 25.899 23.9748 26.8477 23.0923C27.7964 22.2097 28.3294 21.0128 28.3294 19.7647V4.70588C28.3294 3.4578 27.7964 2.26085 26.8477 1.37832C25.899 0.495797 24.6123 0 23.2706 0H7.08235ZM26.3059 30.1176H17.6917C18.2037 29.5398 18.6509 28.9092 19.0212 28.2353H26.3059C27.9159 28.2353 29.46 27.6403 30.5984 26.5813C31.7369 25.5223 32.3765 24.0859 32.3765 22.5882V10.3529C32.3768 9.7688 32.1824 9.19894 31.8199 8.7219C31.4575 8.24486 30.945 7.88413 30.3529 7.68941V5.74118C31.4956 5.95815 32.5226 6.5357 33.2601 7.37609C33.9975 8.21648 34.4002 9.26809 34.4 10.3529V22.5882C34.4 24.5852 33.5472 26.5003 32.0293 27.9123C30.5113 29.3244 28.4526 30.1176 26.3059 30.1176ZM26.3059 4.70588V5.64706H13.1529C12.8846 5.64706 12.6273 5.5479 12.4375 5.37139C12.2478 5.19489 12.1412 4.9555 12.1412 4.70588V1.88235H23.2706C24.0756 1.88235 24.8476 2.17983 25.4169 2.70935C25.9861 3.23886 26.3059 3.95704 26.3059 4.70588ZM18.2118 23.5294C18.2118 25.776 17.2524 27.9305 15.5447 29.519C13.837 31.1076 11.5209 32 9.10588 32C6.69085 32 4.37474 31.1076 2.66705 29.519C0.959367 27.9305 0 25.776 0 23.5294C0 21.2829 0.959367 19.1283 2.66705 17.5398C4.37474 15.9513 6.69085 15.0588 9.10588 15.0588C11.5209 15.0588 13.837 15.9513 15.5447 17.5398C17.2524 19.1283 18.2118 21.2829 18.2118 23.5294ZM10.1176 19.7647C10.1176 19.5151 10.0111 19.2757 9.82131 19.0992C9.63157 18.9227 9.37422 18.8235 9.10588 18.8235C8.83755 18.8235 8.5802 18.9227 8.39046 19.0992C8.20072 19.2757 8.09412 19.5151 8.09412 19.7647V22.5882H5.05882C4.79049 22.5882 4.53314 22.6874 4.3434 22.8639C4.15366 23.0404 4.04706 23.2798 4.04706 23.5294C4.04706 23.779 4.15366 24.0184 4.3434 24.1949C4.53314 24.3714 4.79049 24.4706 5.05882 24.4706H8.09412V27.2941C8.09412 27.5437 8.20072 27.7831 8.39046 27.9596C8.5802 28.1361 8.83755 28.2353 9.10588 28.2353C9.37422 28.2353 9.63157 28.1361 9.82131 27.9596C10.0111 27.7831 10.1176 27.5437 10.1176 27.2941V24.4706H13.1529C13.4213 24.4706 13.6786 24.3714 13.8684 24.1949C14.0581 24.0184 14.1647 23.779 14.1647 23.5294C14.1647 23.2798 14.0581 23.0404 13.8684 22.8639C13.6786 22.6874 13.4213 22.5882 13.1529 22.5882H10.1176V19.7647Z"
+                    fill="url(#paint0_linear_121_103)"
+                  />
+                  <defs>
+                    <linearGradient
+                      id="paint0_linear_121_103"
+                      x1="17.2"
+                      y1="0"
+                      x2="17.2"
+                      y2="32"
+                      gradientUnits="userSpaceOnUse"
+                    >
+                      <stop stop-color="#034AA6" />
+                      <stop offset="1" stop-color="#3F88DD" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </span>
+
+              <span class="tabs">tabs</span>
+            </div>
+            <div class="favouriteHolder">
+              <span id="favorite">
+                <svg
+                  width="35"
+                  height="32"
+                  viewBox="0 0 35 32"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M17.372 27.1172L17.2 27.2916L17.0108 27.1172C8.8408 19.6011 3.44 14.6311 3.44 9.59128C3.44 6.10354 6.02 3.48774 9.46 3.48774C12.1088 3.48774 14.6888 5.23161 15.6004 7.60327H18.7996C19.7112 5.23161 22.2912 3.48774 24.94 3.48774C28.38 3.48774 30.96 6.10354 30.96 9.59128C30.96 14.6311 25.5592 19.6011 17.372 27.1172ZM24.94 0C21.9472 0 19.0748 1.41253 17.2 3.62725C15.3252 1.41253 12.4528 0 9.46 0C4.1624 0 0 4.20272 0 9.59128C0 16.1657 5.848 21.5542 14.706 29.6981L17.2 32L19.694 29.6981C28.552 21.5542 34.4 16.1657 34.4 9.59128C34.4 4.20272 30.2376 0 24.94 0Z"
+                    fill="url(#paint0_linear_121_101)"
+                  />
+                  <defs>
+                    <linearGradient
+                      id="paint0_linear_121_101"
+                      x1="17.2"
+                      y1="0"
+                      x2="17.2"
+                      y2="32"
+                      gradientUnits="userSpaceOnUse"
+                    >
+                      <stop stop-color="#034AA6" />
+                      <stop offset="1" stop-color="#3F88DD" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </span>
+
+              <span class="favorite">favorite</span>
+            </div>
+          </div>
+        </div>
+        <div class="filterCollectionHolder">
+          <select class="filterBy">
+            <option value="">filter by</option>
+          </select>
+          <select class="collections">
+            <option value="">collections</option>
+            <option value="educational">Educational</option>
+            <option value="books">Books</option>
+            <option value="cars">Cars</option>
+            <option value="important">Important</option>
+          </select>
+        </div>
+        <div class="searchResultsHolder">
+          <div id="search-results"></div>
+          <div id="pagination-container"></div>
+        </div>
+        <!-- Profile Section -->
+        <div class="profileSection">
+          <span class="profileSectionHeader"> Account </span>
+          <div class="profileSectionContent">
+            <div class="profileSectionContentPicture">
+              <div class="profilePicPlaceholder"></div>
+              <img
+                src="images/upload.png"
+                alt="upload"
+                id="upload"
+                class="uploadIcon"
+              />
+            </div>
+            <div class="profileSectionContentDetails">
+              <div class="profileSectionUsername">
+                <span class="profileSectionUsernameLabel">Username</span>
+                <input
+                  type="text"
+                  placeholder="callistus"
+                  class="profileSectionUsernameInput"
+                />
+              </div>
+              <div class="profileSectionEmail">
+                <span class="profileSectionEmailLabel">Email</span>
+                <input
+                  type="email"
+                  placeholder="callistus@gmail.com"
+                  class="profileSectionEmailInput"
+                />
+              </div>
+              <div class="profileSectionPassword">
+                <span class="profileSectionPasswordLabel">Password</span>
+                <input
+                  type="password"
+                  placeholder="********"
+                  class="profileSectionPasswordInput"
+                />
+              </div>
+              <div class="profileSectionTag">
+                <span class="profileSectionTagLabel">Tags</span>
+                <input type="text" class="profileSectionTagInput" />
+              </div>
+              <div class="profileSectionUrl">
+                <span class="profileSectionUrlLabel">Url</span>
+                <input type="text" class="profileSectionUrlInput" />
+              </div>
+              <div class="editBtnHolder">
+                <button type="submit" class="editButton">Edit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Section -->
+        <div class="tabSection">
+          <div class="tabSectionContent">
+            <div class="tabSectionContentPicture">
+              <div class="tabSectionContentPicPlaceholder"></div>
+              <img
+                src="images/plusImg.png"
+                alt="upload"
+                id="upload"
+                class="tabSectionContentuploadIcon"
+              />
+            </div>
+            <div class="tabSectionContentDetails">
+              <div class="tabSectionName">
+                <span class="tabSectionNameLabel">Tab Name</span>
+                <input type="text" class="tabSectionNameInput" />
+              </div>
+              <div class="tabSectionContentDesc">
+                <span class="tabSectionContentDescLabel">Description</span>
+                <textarea
+                  id="tabSectionDescription"
+                  name="tabSectionDescription"
+                  class="tabSectionContentDescText"
+                  rows="7"
+                ></textarea>
+              </div>
+              <div class="tabSectionCollection">
+                <span class="tabSectionCollectionLabel">Collection</span>
+                <select class="tabSectionCollectionOptions">
+                  <option value=""></option>
+                  <option value="educational">Educational</option>
+                  <option value="books">Books</option>
+                  <option value="cars">Cars</option>
+                  <option value="important">Important</option>
+                </select>
+                <img
+                  src="images/folderImg.png"
+                  alt="folder"
+                  id="tabSectionCollectionFolderImg"
+                  class="tabSectionCollectionFolderImg"
+                />
+              </div>
+              <div class="tabSectionTag">
+                <span class="tabSectionTagLabel">Tags</span>
+                <input type="text" class="tabSectionTagInput" />
+              </div>
+              <div class="tabSectionUrl">
+                <span class="tabSectionUrlLabel">URL</span>
+                <input type="text" class="tabSectionUrlInput" />
+              </div>
+              <div class="tabSectionSaveHolder">
+                <button type="submit" class="tabSectionSave">Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Tabs section -->
+        <div class="tabsSection">
+          <div class="tabsSectionContent">
+            <div class="tabsSectionContentDetailsHolder">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.9em"
+                height="1.9em"
+                viewBox="0 0 20 20"
+                class="tabsSectionContentUnChecked"
+              >
+                <path
+                  fill="rgba(0, 0, 0, 1)"
+                  d="M3 6a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3zm3-1.5A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h8a1.5 1.5 0 0 0 1.5-1.5V6A1.5 1.5 0 0 0 14 4.5z"
+                />
+              </svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.9em"
+                height="1.9em"
+                viewBox="0 0 24 24"
+                class="tabsSectionContentChecked"
+              >
+                <g fill="rgba(0, 0, 0, 1)">
+                  <path
+                    d="M10.243 16.314L6 12.07l1.414-1.414l2.829 2.828l5.656-5.657l1.415 1.415z"
+                  />
+                  <path
+                    fill-rule="evenodd"
+                    d="M1 5a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4v14a4 4 0 0 1-4 4H5a4 4 0 0 1-4-4zm4-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2"
+                    clip-rule="evenodd"
+                  />
+                </g>
+              </svg>
+              <span class="tabsSectionContentText">Google Page</span>
+            </div>
+            <div class="tabsSectionContentDetailsHolder">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.9em"
+                height="1.9em"
+                viewBox="0 0 20 20"
+                class="tabsSectionContentUnChecked"
+              >
+                <path
+                  fill="rgba(0, 0, 0, 1)"
+                  d="M3 6a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3zm3-1.5A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h8a1.5 1.5 0 0 0 1.5-1.5V6A1.5 1.5 0 0 0 14 4.5z"
+                />
+              </svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.9em"
+                height="1.9em"
+                viewBox="0 0 24 24"
+                class="tabsSectionContentChecked"
+              >
+                <g fill="rgba(0, 0, 0, 1)">
+                  <path
+                    d="M10.243 16.314L6 12.07l1.414-1.414l2.829 2.828l5.656-5.657l1.415 1.415z"
+                  />
+                  <path
+                    fill-rule="evenodd"
+                    d="M1 5a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4v14a4 4 0 0 1-4 4H5a4 4 0 0 1-4-4zm4-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2"
+                    clip-rule="evenodd"
+                  />
+                </g>
+              </svg>
+              <span class="tabsSectionContentText">Google Page</span>
+            </div>
+            <div class="tabsSectionContentDetailsHolder">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.9em"
+                height="1.9em"
+                viewBox="0 0 20 20"
+                class="tabsSectionContentUnChecked"
+              >
+                <path
+                  fill="rgba(0, 0, 0, 1)"
+                  d="M3 6a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3zm3-1.5A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h8a1.5 1.5 0 0 0 1.5-1.5V6A1.5 1.5 0 0 0 14 4.5z"
+                />
+              </svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.9em"
+                height="1.9em"
+                viewBox="0 0 24 24"
+                class="tabsSectionContentChecked"
+              >
+                <g fill="rgba(0, 0, 0, 1)">
+                  <path
+                    d="M10.243 16.314L6 12.07l1.414-1.414l2.829 2.828l5.656-5.657l1.415 1.415z"
+                  />
+                  <path
+                    fill-rule="evenodd"
+                    d="M1 5a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4v14a4 4 0 0 1-4 4H5a4 4 0 0 1-4-4zm4-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2"
+                    clip-rule="evenodd"
+                  />
+                </g>
+              </svg>
+              <span class="tabsSectionContentText">Google Page</span>
+            </div>
+            <div class="tabsSectionContentDetailsHolder">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.9em"
+                height="1.9em"
+                viewBox="0 0 20 20"
+                class="tabsSectionContentUnChecked"
+              >
+                <path
+                  fill="rgba(0, 0, 0, 1)"
+                  d="M3 6a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3zm3-1.5A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h8a1.5 1.5 0 0 0 1.5-1.5V6A1.5 1.5 0 0 0 14 4.5z"
+                />
+              </svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.9em"
+                height="1.9em"
+                viewBox="0 0 24 24"
+                class="tabsSectionContentChecked"
+              >
+                <g fill="rgba(0, 0, 0, 1)">
+                  <path
+                    d="M10.243 16.314L6 12.07l1.414-1.414l2.829 2.828l5.656-5.657l1.415 1.415z"
+                  />
+                  <path
+                    fill-rule="evenodd"
+                    d="M1 5a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4v14a4 4 0 0 1-4 4H5a4 4 0 0 1-4-4zm4-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2"
+                    clip-rule="evenodd"
+                  />
+                </g>
+              </svg>
+              <span class="tabsSectionContentText">Google Page</span>
+            </div>
+            <div class="tabsSectionContentDetailsHolder">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.9em"
+                height="1.9em"
+                viewBox="0 0 20 20"
+                class="tabsSectionContentUnChecked"
+              >
+                <path
+                  fill="rgba(0, 0, 0, 1)"
+                  d="M3 6a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3zm3-1.5A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h8a1.5 1.5 0 0 0 1.5-1.5V6A1.5 1.5 0 0 0 14 4.5z"
+                />
+              </svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.9em"
+                height="1.9em"
+                viewBox="0 0 24 24"
+                class="tabsSectionContentChecked"
+              >
+                <g fill="rgba(0, 0, 0, 1)">
+                  <path
+                    d="M10.243 16.314L6 12.07l1.414-1.414l2.829 2.828l5.656-5.657l1.415 1.415z"
+                  />
+                  <path
+                    fill-rule="evenodd"
+                    d="M1 5a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4v14a4 4 0 0 1-4 4H5a4 4 0 0 1-4-4zm4-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2"
+                    clip-rule="evenodd"
+                  />
+                </g>
+              </svg>
+              <span class="tabsSectionContentText">Google Page</span>
+            </div>
+            <div class="tabsSectionContentDetailsHolder">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.9em"
+                height="1.9em"
+                viewBox="0 0 20 20"
+                class="tabsSectionContentUnChecked"
+              >
+                <path
+                  fill="rgba(0, 0, 0, 1)"
+                  d="M3 6a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3zm3-1.5A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h8a1.5 1.5 0 0 0 1.5-1.5V6A1.5 1.5 0 0 0 14 4.5z"
+                />
+              </svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.9em"
+                height="1.9em"
+                viewBox="0 0 24 24"
+                class="tabsSectionContentChecked"
+              >
+                <g fill="rgba(0, 0, 0, 1)">
+                  <path
+                    d="M10.243 16.314L6 12.07l1.414-1.414l2.829 2.828l5.656-5.657l1.415 1.415z"
+                  />
+                  <path
+                    fill-rule="evenodd"
+                    d="M1 5a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4v14a4 4 0 0 1-4 4H5a4 4 0 0 1-4-4zm4-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2"
+                    clip-rule="evenodd"
+                  />
+                </g>
+              </svg>
+              <span class="tabsSectionContentText">Google Page</span>
+            </div>
+          </div>
+          <div class="tabsSectionSelectedSection">
+            <select class="tabsSectionCollectionOption">
+              <option value="">Collections</option>
+              <option value="educational">Educational</option>
+              <option value="books">Books</option>
+              <option value="cars">Cars</option>
+              <option value="important">Important</option>
+            </select>
+            <div class="tabsSectionSelectedSectionDetails">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.9em"
+                height="1.9em"
+                viewBox="0 0 24 24"
+                class="tabsChecked"
+              >
+                <g fill="rgba(0, 0, 0, 1)">
+                  <path
+                    d="M10.243 16.314L6 12.07l1.414-1.414l2.829 2.828l5.656-5.657l1.415 1.415z"
+                  />
+                  <path
+                    fill-rule="evenodd"
+                    d="M1 5a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4v14a4 4 0 0 1-4 4H5a4 4 0 0 1-4-4zm4-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2"
+                    clip-rule="evenodd"
+                  />
+                </g>
+              </svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.9em"
+                height="1.9em"
+                viewBox="0 0 20 20"
+                class="tabsUnChecked"
+              >
+                <path
+                  fill="rgba(0, 0, 0, 1)"
+                  d="M3 6a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3zm3-1.5A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h8a1.5 1.5 0 0 0 1.5-1.5V6A1.5 1.5 0 0 0 14 4.5z"
+                />
+              </svg>
+              <span class="tabsSectionSelectedSectionDetailsTitle"
+                >No Tabs selected</span
+              >
+            </div>
+          </div>
+          <div class="tabsSectionSaveHolder">
+            <button type="submit" class="tabsSectionSave">Save</button>
+          </div>
+        </div>
+
+        <!-- Gpt section -->
+        <div class="gptSection">
+          <span class="gptSectionGreeting">Hello John</span>
+          <p class="gptSectionDetails">
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard dummy text
+            ever since the 1500s, when an unknown printer took a galley of type
+            and scrambled it to make a type specimen book.
+          </p>
+          <div class="gptSectionPlan">
+            <div class="gptSectionPlanHolder">
+              <div class="gptSectionPlanContent">
+                <span class="gptSectionPlanContentTitle">Plan Trip</span>
+                <span class="gptSectionPlanContentDesc"
+                  >Visit the indigenous people of Idoma</span
+                >
+              </div>
+              <div class="gptSectionPlanContent">
+                <span class="gptSectionPlanContentTitle">Plan Trip</span>
+                <span class="gptSectionPlanContentDesc"
+                  >Visit the indigenous people of Idoma</span
+                >
+              </div>
+            </div>
+            <div class="gptSectionPlanHolder">
+              <div class="gptSectionPlanContent">
+                <span class="gptSectionPlanContentTitle">Plan Trip</span>
+                <span class="gptSectionPlanContentDesc"
+                  >Visit the indigenous people of Idoma</span
+                >
+              </div>
+              <div class="gptSectionPlanContent">
+                <span class="gptSectionPlanContentTitle">Plan Trip</span>
+                <span class="gptSectionPlanContentDesc"
+                  >Visit the indigenous people of Idoma</span
+                >
+              </div>
+            </div>
+          </div>
+          <div class="gptSectionPromptSection">
+            <div class="gptSectionPromptSectionInputHolder">
+              <input
+                type="text"
+                placeholder="Enter Prompt ..."
+                class="gptSectionPromptSectionInput"
+              />
+              <img
+                src="images/gptSendHolder.png"
+                alt="gptSendHolder"
+                id="gptSectionPromptImgHolder"
+                class="gptSectionPromptImgHolder"
+              />
+            </div>
+            <img
+              src="images/gptSend.png"
+              alt="gptSend"
+              id="gptSectionPromptImgSender"
+              class="gptSectionPromptImgSender"
+            />
+          </div>
+        </div>
+
+        <!-- Gpt Response Section -->
+        <div class="gptResponseSection">
+          <div class="gptResponseSectionQuestionHolder">
+            <div class="gptResponseSectionQuestionName">UI</div>
+            <div class="gptResponseSectionQuestionText">
+              Can you give me a 4-day itinerary to experience the wildlife in
+              the Australian outback?
+            </div>
+          </div>
+          <div class="gptResponseSectionAnswer">
+            <div class="gptResponseSectionAnswerIcon">
+              <img
+                src="images/searchIcon.png"
+                alt="icon"
+                id="gptResponseSectionAnswerIconImg"
+                class="gptResponseSectionAnswerIconImg"
+              />
+            </div>
+            <div class="gptResponseSectionAnswerDetails">
+              Certainly! Experiencing the wildlife in the Australian outback is
+              a unique and exciting adventure. Keep in mind that the outback is
+              vast, so you may need to adapt this itinerary based on your
+              starting point and specific interests. This example assumes you're
+              starting from Alice Springs, a central location in the Northern
+              Territory. Day 1: Arrival in Alice Springs Morning: Arrive in
+              Alice Springs, check into accommodation, and rest. Afternoon:
+              Explore the Alice Springs Desert Park to get an introduction to
+              the flora and fauna of the region. Evening: Visit the Kangaroo
+              Sanctuary for a guided sunset tour and up-close encounters with
+              rescued kangaroos.
+            </div>
+          </div>
+          <div class="gptResponseSectionAnswerExtra">
+            <div class="gptResponseSectionAnswerCopyHolder">
+              <img
+                src="images/copy1.png"
+                alt="bookmark"
+                id="gptResponseSectionAnswerCopy"
+                class="gptResponseSectionAnswerCopy"
+              />
+              <img
+                src="images/copy.png"
+                alt="bookmark"
+                id="gptResponseSectionAnswerCopy1"
+                class="gptResponseSectionAnswerCopy1"
+              />
+            </div>
+            <img
+              src="images/bookmark.png"
+              alt="bookmark"
+              id="gptResponseSectionAnswerBookmark"
+              class="gptResponseSectionAnswerBookmark"
+            />
+            <img
+              src="images/refresh.png"
+              alt="bookmark"
+              id="gptResponseSectionAnswerRefresh"
+              class="gptResponseSectionAnswerRefresh"
+            />
+          </div>
+          <div class="gptResponseSectionPromptSection">
+            <div class="gptResponseSectionPromptSectionInputHolder">
+              <input
+                type="text"
+                placeholder="Enter Prompt ..."
+                class="gptResponseSectionPromptSectionInput"
+              />
+              <img
+                src="images/gptSendHolder.png"
+                alt="gptSendHolder"
+                id="gptResponseSectionPromptImgHolder"
+                class="gptResponseSectionPromptImgHolder"
+              />
+            </div>
+            <img
+              src="images/gptSend.png"
+              alt="gptSend"
+              id="gptResponseSectionPromptImgSender"
+              class="gptResponseSectionPromptImgSender"
+            />
+          </div>
+        </div>
+      </div>
+      <!-- Dashboard Section -->
+      <div class="dashboardSection">
+        <div class="dashboardSectionSidebar">
+          <div class="dashboardSectionSidebarDivider"></div>
+          <div class="dashboardSectionSidebarBookmark">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="2em"
+              height="2em"
+              viewBox="0 0 24 24"
+              class="dashboardSectionSidebarBookmarkIcon"
+            >
+              <path
+                fill="#034aa6"
+                fill-rule="evenodd"
+                d="M9.945 1.25h4.11c1.368 0 2.47 0 3.337.117c.9.12 1.658.38 2.26.981c.602.602.86 1.36.982 2.26c.116.867.116 1.97.116 3.337v8.11c0 1.367 0 2.47-.116 3.337c-.121.9-.38 1.658-.982 2.26c-.602.602-1.36.86-2.26.982c-.867.116-1.97.116-3.337.116h-4.11c-1.367 0-2.47 0-3.337-.116c-.9-.122-1.658-.38-2.26-.982c-.601-.602-.86-1.36-.981-2.26a11.487 11.487 0 0 1-.082-.943a.746.746 0 0 1-.016-.392a65.809 65.809 0 0 1-.019-2.002v-8.11c0-1.367 0-2.47.117-3.337c.12-.9.38-1.658.982-2.26c.601-.602 1.36-.86 2.26-.981c.866-.117 1.969-.117 3.336-.117m-5.168 17c.015.353.039.664.076.942c.099.734.28 1.122.556 1.399c.277.277.666.457 1.4.556c.755.101 1.756.103 3.191.103h4c1.436 0 2.437-.002 3.192-.103c.734-.099 1.122-.28 1.4-.556c.276-.277.456-.665.555-1.4c.083-.615.1-1.395.102-2.441H13.75v2.808c0 .111 0 .27-.02.406a.937.937 0 0 1-.445.683a.958.958 0 0 1-.783.072c-.13-.04-.272-.109-.378-.159l-.024-.012l-1.1-.522l-1.1.522l-.024.012c-.106.05-.248.118-.378.159a.957.957 0 0 1-.783-.072a.937.937 0 0 1-.444-.683a2.653 2.653 0 0 1-.02-.406V16.75h-.353c-.978 0-1.32.006-1.582.077a2.25 2.25 0 0 0-1.54 1.422m4.973-1.5v2.21l.75-.357l.008-.004a1.13 1.13 0 0 1 .492-.13c.236 0 .443.105.492.13l.009.004l.75.356V16.75zm-1.852-1.5h-.116c-.818 0-1.376 0-1.855.128a3.748 3.748 0 0 0-1.177.548V8c0-1.435.002-2.437.103-3.192c.099-.734.28-1.122.556-1.399c.277-.277.666-.457 1.4-.556c.755-.101 1.756-.103 3.191-.103h4c1.436 0 2.437.002 3.192.103c.734.099 1.122.28 1.4.556c.276.277.456.665.555 1.4c.102.754.103 1.756.103 3.191v7.25zM7.25 7A.75.75 0 0 1 8 6.25h8a.75.75 0 0 1 0 1.5H8A.75.75 0 0 1 7.25 7m0 3.5A.75.75 0 0 1 8 9.75h5a.75.75 0 0 1 0 1.5H8a.75.75 0 0 1-.75-.75"
+                clip-rule="evenodd"
+              />
+            </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="2em"
+              height="2em"
+              viewBox="0 0 24 24"
+              class="dashboardSectionSidebarBookmarkIconSelected"
+            >
+              <path
+                fill="white"
+                fill-rule="evenodd"
+                d="M9.945 1.25h4.11c1.368 0 2.47 0 3.337.117c.9.12 1.658.38 2.26.981c.602.602.86 1.36.982 2.26c.116.867.116 1.97.116 3.337v8.11c0 1.367 0 2.47-.116 3.337c-.121.9-.38 1.658-.982 2.26c-.602.602-1.36.86-2.26.982c-.867.116-1.97.116-3.337.116h-4.11c-1.367 0-2.47 0-3.337-.116c-.9-.122-1.658-.38-2.26-.982c-.601-.602-.86-1.36-.981-2.26a11.487 11.487 0 0 1-.082-.943a.746.746 0 0 1-.016-.392a65.809 65.809 0 0 1-.019-2.002v-8.11c0-1.367 0-2.47.117-3.337c.12-.9.38-1.658.982-2.26c.601-.602 1.36-.86 2.26-.981c.866-.117 1.969-.117 3.336-.117m-5.168 17c.015.353.039.664.076.942c.099.734.28 1.122.556 1.399c.277.277.666.457 1.4.556c.755.101 1.756.103 3.191.103h4c1.436 0 2.437-.002 3.192-.103c.734-.099 1.122-.28 1.4-.556c.276-.277.456-.665.555-1.4c.083-.615.1-1.395.102-2.441H13.75v2.808c0 .111 0 .27-.02.406a.937.937 0 0 1-.445.683a.958.958 0 0 1-.783.072c-.13-.04-.272-.109-.378-.159l-.024-.012l-1.1-.522l-1.1.522l-.024.012c-.106.05-.248.118-.378.159a.957.957 0 0 1-.783-.072a.937.937 0 0 1-.444-.683a2.653 2.653 0 0 1-.02-.406V16.75h-.353c-.978 0-1.32.006-1.582.077a2.25 2.25 0 0 0-1.54 1.422m4.973-1.5v2.21l.75-.357l.008-.004a1.13 1.13 0 0 1 .492-.13c.236 0 .443.105.492.13l.009.004l.75.356V16.75zm-1.852-1.5h-.116c-.818 0-1.376 0-1.855.128a3.748 3.748 0 0 0-1.177.548V8c0-1.435.002-2.437.103-3.192c.099-.734.28-1.122.556-1.399c.277-.277.666-.457 1.4-.556c.755-.101 1.756-.103 3.191-.103h4c1.436 0 2.437.002 3.192.103c.734.099 1.122.28 1.4.556c.276.277.456.665.555 1.4c.102.754.103 1.756.103 3.191v7.25zM7.25 7A.75.75 0 0 1 8 6.25h8a.75.75 0 0 1 0 1.5H8A.75.75 0 0 1 7.25 7m0 3.5A.75.75 0 0 1 8 9.75h5a.75.75 0 0 1 0 1.5H8a.75.75 0 0 1-.75-.75"
+                clip-rule="evenodd"
+              />
+            </svg>
+            <span class="dashboardSectionSidebarBookmarkText">Bookmarks</span>
+          </div>
+          <div class="dashboardSectionSidebarFavorite">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="1.5em"
+              height="1.5em"
+              viewBox="0 0 24 24"
+              class="dashboardSectionSidebarFavoriteIcon"
+            >
+              <path
+                fill="#034aa6"
+                d="m12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5C2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54z"
+              />
+            </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="1.5em"
+              height="1.5em"
+              viewBox="0 0 24 24"
+              class="dashboardSectionSidebarFavoriteIconSelected"
+            >
+              <path
+                fill="white"
+                d="m12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5C2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54z"
+              />
+            </svg>
+            <span class="dashboardSectionSidebarFavoriteText">Favorites</span>
+          </div>
+          <div class="dashboardSectionSidebarCollection">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="2em"
+              height="2em"
+              viewBox="0 0 16 16"
+              class="dashboardSectionSidebarCollectionIcon"
+            >
+              <path
+                fill="#034aa6"
+                d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6zm1.5.5A.5.5 0 0 1 1 13V6a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5z"
+              />
+            </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="2em"
+              height="2em"
+              viewBox="0 0 16 16"
+              class="dashboardSectionSidebarCollectionIconSelected"
+            >
+              <path
+                fill="white"
+                d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6zm1.5.5A.5.5 0 0 1 1 13V6a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5z"
+              />
+            </svg>
+            <span class="dashboardSectionSidebarCollectionText"
+              >Collection</span
+            >
+          </div>
+          <div class="dashboardSectionSidebarLinks">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="2em"
+              height="2em"
+              viewBox="0 0 20 20"
+              class="dashboardSectionSidebarLinksIcon"
+            >
+              <path
+                fill="#034aa6"
+                d="M17.74 2.76a4.321 4.321 0 0 1 0 6.1l-1.53 1.52c-1.12 1.12-2.7 1.47-4.14 1.09l2.62-2.61l.76-.77l.76-.76c.84-.84.84-2.2 0-3.04a2.13 2.13 0 0 0-3.04 0l-.77.76l-3.38 3.38c-.37-1.44-.02-3.02 1.1-4.14l1.52-1.53a4.321 4.321 0 0 1 6.1 0M8.59 13.43l5.34-5.34c.42-.42.42-1.1 0-1.52c-.44-.43-1.13-.39-1.53 0l-5.33 5.34c-.42.42-.42 1.1 0 1.52c.44.43 1.13.39 1.52 0m-.76 2.29l4.14-4.15c.38 1.44.03 3.02-1.09 4.14l-1.52 1.53a4.321 4.321 0 0 1-6.1 0a4.321 4.321 0 0 1 0-6.1l1.53-1.52c1.12-1.12 2.7-1.47 4.14-1.1l-4.14 4.15c-.85.84-.85 2.2 0 3.05c.84.84 2.2.84 3.04 0"
+              />
+            </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="2em"
+              height="2em"
+              viewBox="0 0 20 20"
+              class="dashboardSectionSidebarLinksIconSelected"
+            >
+              <path
+                fill="white"
+                d="M17.74 2.76a4.321 4.321 0 0 1 0 6.1l-1.53 1.52c-1.12 1.12-2.7 1.47-4.14 1.09l2.62-2.61l.76-.77l.76-.76c.84-.84.84-2.2 0-3.04a2.13 2.13 0 0 0-3.04 0l-.77.76l-3.38 3.38c-.37-1.44-.02-3.02 1.1-4.14l1.52-1.53a4.321 4.321 0 0 1 6.1 0M8.59 13.43l5.34-5.34c.42-.42.42-1.1 0-1.52c-.44-.43-1.13-.39-1.53 0l-5.33 5.34c-.42.42-.42 1.1 0 1.52c.44.43 1.13.39 1.52 0m-.76 2.29l4.14-4.15c.38 1.44.03 3.02-1.09 4.14l-1.52 1.53a4.321 4.321 0 0 1-6.1 0a4.321 4.321 0 0 1 0-6.1l1.53-1.52c1.12-1.12 2.7-1.47 4.14-1.1l-4.14 4.15c-.85.84-.85 2.2 0 3.05c.84.84 2.2.84 3.04 0"
+              />
+            </svg>
+            <span class="dashboardSectionSidebarLinksText">Links</span>
+          </div>
+          <div class="dashboardSectionSidebarImages">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="2em"
+              height="2em"
+              viewBox="0 0 512 512"
+              class="dashboardSectionSidebarImagesIcon"
+            >
+              <path
+                fill="#034aa6"
+                d="M450.29 112H142c-34 0-62 27.51-62 61.33v245.34c0 33.82 28 61.33 62 61.33h308c34 0 62-26.18 62-60V173.33c0-33.82-27.68-61.33-61.71-61.33m-77.15 61.34a46 46 0 1 1-46.28 46a46.19 46.19 0 0 1 46.28-46.01Zm-231.55 276c-17 0-29.86-13.75-29.86-30.66v-64.83l90.46-80.79a46.54 46.54 0 0 1 63.44 1.83L328.27 337l-113 112.33ZM480 418.67a30.67 30.67 0 0 1-30.71 30.66H259L376.08 333a46.24 46.24 0 0 1 59.44-.16L480 370.59Z"
+              />
+              <path
+                fill="#034aa6"
+                d="M384 32H64A64 64 0 0 0 0 96v256a64.11 64.11 0 0 0 48 62V152a72 72 0 0 1 72-72h326a64.11 64.11 0 0 0-62-48"
+              />
+            </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="2em"
+              height="2em"
+              viewBox="0 0 512 512"
+              class="dashboardSectionSidebarImagesIconSelected"
+            >
+              <path
+                fill="white"
+                d="M450.29 112H142c-34 0-62 27.51-62 61.33v245.34c0 33.82 28 61.33 62 61.33h308c34 0 62-26.18 62-60V173.33c0-33.82-27.68-61.33-61.71-61.33m-77.15 61.34a46 46 0 1 1-46.28 46a46.19 46.19 0 0 1 46.28-46.01Zm-231.55 276c-17 0-29.86-13.75-29.86-30.66v-64.83l90.46-80.79a46.54 46.54 0 0 1 63.44 1.83L328.27 337l-113 112.33ZM480 418.67a30.67 30.67 0 0 1-30.71 30.66H259L376.08 333a46.24 46.24 0 0 1 59.44-.16L480 370.59Z"
+              />
+              <path
+                fill="white"
+                d="M384 32H64A64 64 0 0 0 0 96v256a64.11 64.11 0 0 0 48 62V152a72 72 0 0 1 72-72h326a64.11 64.11 0 0 0-62-48"
+              />
+            </svg>
+            <span class="dashboardSectionSidebarImagesText">Images</span>
+          </div>
+          <div class="dashboardSectionSidebarVideos">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="2.1em"
+              height="2.1em"
+              viewBox="0 0 24 24"
+              class="dashboardSectionSidebarVideoIcon"
+            >
+              <path fill="#034aa6" d="M4 8H2v12a2 2 0 0 0 2 2h12v-2H4z" />
+              <path
+                fill="#034aa6"
+                d="M20 2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2m-9 12V6l7 4z"
+              />
+            </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="2.1em"
+              height="2.1em"
+              viewBox="0 0 24 24"
+              class="dashboardSectionSidebarVideoIconSelected"
+            >
+              <path fill="white" d="M4 8H2v12a2 2 0 0 0 2 2h12v-2H4z" />
+              <path
+                fill="white"
+                d="M20 2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2m-9 12V6l7 4z"
+              />
+            </svg>
+
+            <span class="dashboardSectionSidebarVideoText">Videos</span>
+          </div>
+          <div class="dashboardSectionSidebarArticles">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="2em"
+              height="2em"
+              viewBox="0 0 24 24"
+              class="dashboardSectionSidebarArticlesIcon"
+            >
+              <path
+                fill="#034aa6"
+                d="M7 17h7v-2H7zm0-4h10v-2H7zm0-4h10V7H7zM5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h14q.825 0 1.413.588T21 5v14q0 .825-.587 1.413T19 21zm0-2h14V5H5zM5 5v14z"
+              />
+            </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="2em"
+              height="2em"
+              viewBox="0 0 24 24"
+              class="dashboardSectionSidebarArticlesIconSelected"
+            >
+              <path
+                fill="white"
+                d="M7 17h7v-2H7zm0-4h10v-2H7zm0-4h10V7H7zM5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h14q.825 0 1.413.588T21 5v14q0 .825-.587 1.413T19 21zm0-2h14V5H5zM5 5v14z"
+              />
+            </svg>
+            <span class="dashboardSectionSidebarArticlesText">Articles</span>
+          </div>
+          <div class="dashboardSidebarUpgradeInfo">
+            <div class="dashboardSidebarUpgradeInfoCaption">
+              <img
+                src="images/searchIcon.png"
+                alt="videos"
+                id="dashboardSidebarUpgradeInfoCaptionIcon"
+                class="dashboardSidebarUpgradeInfoCaptionIcon"
+              />
+              <span class="dashboardSidebarUpgradeInfoCaptionTitle"
+                >Upgrade to enjoy <br />
+                more features</span
+              >
+            </div>
+            <div class="dashboardSidebarUpgradeInfoDetails">
+              <span>* Upgrade</span>
+              <span>* to enjoy</span>
+              <span>* more features</span>
+              <span>* template</span>
+            </div>
+          </div>
+        </div>
+        <div class="dashboardSectionContent">
+          <div class="dashboardSectionContentDivider"></div>
+          <div class="dashboardSectionContentHeading">
+            <span class="dashboardSectionContentHeadingCaption">Bookmarks</span>
+            <div class="dashboardSectionContentHeadingFilter">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="rgba(128, 123, 123, 1)"
+                  d="M5.5 9A1.5 1.5 0 0 0 7 7.5A1.5 1.5 0 0 0 5.5 6A1.5 1.5 0 0 0 4 7.5A1.5 1.5 0 0 0 5.5 9m11.91 2.58c.36.36.59.86.59 1.42c0 .55-.22 1.05-.59 1.41l-5 5a1.996 1.996 0 0 1-2.83 0l-6.99-6.99C2.22 12.05 2 11.55 2 11V6c0-1.11.89-2 2-2h5c.55 0 1.05.22 1.41.58zm-3.87-5.87l1-1l6.87 6.87c.37.36.59.87.59 1.42c0 .55-.22 1.05-.58 1.41l-5.38 5.38l-1-1L20.75 13z"
+                />
+              </svg>
+              <span class="dashboardSectionContentHeadingFilterByTags"
+                >Filter by Tags</span
+              >
+              <input type="text" class="filterTagInputText" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="2em"
+                height="2em"
+                viewBox="0 0 24 24"
+                style="margin-top: -7.5px"
+                class="filterDownArrow"
+              >
+                <path fill="rgba(128, 123, 123, 1)" d="m7 10l5 5l5-5z" />
+              </svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.3em"
+                height="1.3em"
+                viewBox="0 0 48 48"
+                class="filterAddPlus"
+              >
+                <g
+                  fill="none"
+                  stroke="rgba(128, 123, 123, 1)"
+                  stroke-linejoin="round"
+                  stroke-width="4"
+                >
+                  <rect width="36" height="36" x="6" y="6" rx="3" />
+                  <path stroke-linecap="round" d="M24 16v16m-8-8h16" />
+                </g>
+              </svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.3em"
+                height="1.3em"
+                viewBox="0 0 15 15"
+                class="filterbyTagTick"
+              >
+                <path
+                  fill="none"
+                  stroke="rgba(128, 123, 123, 1)"
+                  stroke-linejoin="round"
+                  d="M4 7.5L7 10l4-5M7.5.5l-7 4v.72a9.651 9.651 0 0 0 7 9.28a9.651 9.651 0 0 0 7-9.28V4.5z"
+                />
+              </svg>
+            </div>
+            <div class="dashboardSectionContentHeadingSortHolder">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="2em"
+                height="2em"
+                viewBox="0 0 2048 2048"
+                style="margin-top: -1.5px; margin-right: 1px"
+                class="dashboardSectionContentHeadingSortIcon1"
+              >
+                <path
+                  fill="rgba(128, 123, 123, 1)"
+                  d="M2048 384v128H512V384zM512 896h1536v128H512zm0 512h1536v128H512zM0 256h384v384H0zm128 256h128V384H128zM0 768h384v384H0zm128 256h128V896H128zM0 1280h384v384H0zm128 256h128v-128H128z"
+                />
+              </svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="2em"
+                height="2em"
+                viewBox="0 0 24 24"
+                style="margin-top: -1.5px; font-weight: 500"
+                class="dashboardSectionContentHeadingSortIcon2"
+              >
+                <path
+                  fill="rgba(128, 123, 123, 1)"
+                  d="m18 21l-4-4h3V7h-3l4-4l4 4h-3v10h3M2 19v-2h10v2M2 13v-2h7v2M2 7V5h4v2z"
+                />
+              </svg>
+              <!-- <i
+                class="fa fa-sort-amount-asc dashboardSectionContentHeadingSortIcon2"
+                aria-hidden="true"
+              ></i> -->
+            </div>
+          </div>
+
+          <!-- Filter By tags -->
+          <div class="filterbyTagsContent"></div>
+
+          <div class="dashboardSectionContentHolder"></div>
+          <div class="dashboardCardDisplay">
+            <div class="dashboardCardDisplayContainer">
+              <div class="dashboardCardDisplayContainerDetails">
+                <div class="cardDisplayImageHolder">
+                  <img
+                    src="images/googleImg.png"
+                    alt="filter"
+                    id="cardDisplayImg"
+                    class="cardDisplayImg"
+                  />
+                </div>
+                <span class="dashboardCardDisplayContainerDetailsTitle"
+                  >My first bookmark</span
+                >
+                <span class="dashboardCardDisplayContainerDetailsDate"
+                  >Tue, Jan 2024</span
+                >
+                <span class="dashboardCardDisplayContainerDetailsUrl"
+                  >www.google.com</span
+                >
+              </div>
+              <div class="dashboardCardDisplayContainerDetails">
+                <div class="cardDisplayImageHolder">
+                  <img
+                    src="images/googleImg.png"
+                    alt="filter"
+                    id="cardDisplayImg"
+                    class="cardDisplayImg"
+                  />
+                </div>
+                <span class="dashboardCardDisplayContainerDetailsTitle"
+                  >My first bookmark</span
+                >
+                <span class="dashboardCardDisplayContainerDetailsDate"
+                  >Tue, Jan 2024</span
+                >
+                <span class="dashboardCardDisplayContainerDetailsUrl"
+                  >www.google.com</span
+                >
+              </div>
+              <div class="dashboardCardDisplayContainerDetails">
+                <div class="cardDisplayImageHolder">
+                  <img
+                    src="images/googleImg.png"
+                    alt="filter"
+                    id="cardDisplayImg"
+                    class="cardDisplayImg"
+                  />
+                </div>
+                <span class="dashboardCardDisplayContainerDetailsTitle"
+                  >My first bookmark</span
+                >
+                <span class="dashboardCardDisplayContainerDetailsDate"
+                  >Tue, Jan 2024</span
+                >
+                <span class="dashboardCardDisplayContainerDetailsUrl"
+                  >www.google.com</span
+                >
+              </div>
+              <div class="dashboardCardDisplayContainerDetails">
+                <div class="cardDisplayImageHolder">
+                  <img
+                    src="images/googleImg.png"
+                    alt="filter"
+                    id="cardDisplayImg"
+                    class="cardDisplayImg"
+                  />
+                </div>
+                <span class="dashboardCardDisplayContainerDetailsTitle"
+                  >My first bookmark</span
+                >
+                <span class="dashboardCardDisplayContainerDetailsDate"
+                  >Tue, Jan 2024</span
+                >
+                <span class="dashboardCardDisplayContainerDetailsUrl"
+                  >www.google.com</span
+                >
+              </div>
+              <div class="dashboardCardDisplayContainerDetails">
+                <div class="cardDisplayImageHolder">
+                  <img
+                    src="images/googleImg.png"
+                    alt="filter"
+                    id="cardDisplayImg"
+                    class="cardDisplayImg"
+                  />
+                </div>
+                <span class="dashboardCardDisplayContainerDetailsTitle"
+                  >My first bookmark</span
+                >
+                <span class="dashboardCardDisplayContainerDetailsDate"
+                  >Tue, Jan 2024</span
+                >
+                <span class="dashboardCardDisplayContainerDetailsUrl"
+                  >www.google.com</span
+                >
+              </div>
+              <div class="dashboardCardDisplayContainerDetails">
+                <div class="cardDisplayImageHolder">
+                  <img
+                    src="images/googleImg.png"
+                    alt="filter"
+                    id="cardDisplayImg"
+                    class="cardDisplayImg"
+                  />
+                </div>
+                <span class="dashboardCardDisplayContainerDetailsTitle"
+                  >My first bookmark</span
+                >
+                <span class="dashboardCardDisplayContainerDetailsDate"
+                  >Tue, Jan 2024</span
+                >
+                <span class="dashboardCardDisplayContainerDetailsUrl"
+                  >www.google.com</span
+                >
+              </div>
+              <div class="dashboardCardDisplayContainerDetails">
+                <div class="cardDisplayImageHolder">
+                  <img
+                    src="images/googleImg.png"
+                    alt="filter"
+                    id="cardDisplayImg"
+                    class="cardDisplayImg"
+                  />
+                </div>
+                <span class="dashboardCardDisplayContainerDetailsTitle"
+                  >My first bookmark</span
+                >
+                <span class="dashboardCardDisplayContainerDetailsDate"
+                  >Tue, Jan 2024</span
+                >
+                <span class="dashboardCardDisplayContainerDetailsUrl"
+                  >www.google.com</span
+                >
+              </div>
+              <div class="dashboardCardDisplayContainerDetails">
+                <div class="cardDisplayImageHolder">
+                  <img
+                    src="images/googleImg.png"
+                    alt="filter"
+                    id="cardDisplayImg"
+                    class="cardDisplayImg"
+                  />
+                </div>
+                <span class="dashboardCardDisplayContainerDetailsTitle"
+                  >My first bookmark</span
+                >
+                <span class="dashboardCardDisplayContainerDetailsDate"
+                  >Tue, Jan 2024</span
+                >
+                <span class="dashboardCardDisplayContainerDetailsUrl"
+                  >www.google.com</span
+                >
+              </div>
+              <div class="dashboardCardDisplayContainerDetails">
+                <div class="cardDisplayImageHolder">
+                  <img
+                    src="images/googleImg.png"
+                    alt="filter"
+                    id="cardDisplayImg"
+                    class="cardDisplayImg"
+                  />
+                </div>
+                <span class="dashboardCardDisplayContainerDetailsTitle"
+                  >My first bookmark</span
+                >
+                <span class="dashboardCardDisplayContainerDetailsDate"
+                  >Tue, Jan 2024</span
+                >
+                <span class="dashboardCardDisplayContainerDetailsUrl"
+                  >www.google.com</span
+                >
+              </div>
+            </div>
+          </div>
+          <div class="dashboardFavorites">Favorites will be displayed here</div>
+          <div class="dashboardCollection">
+            Collections will be displayed here
+          </div>
+          <div class="dashboardLinks">Links will be displayed here</div>
+          <div class="dashboardImages">Images will be displayed here</div>
+          <div class="dashboardVideos">Videos will be displayed here</div>
+          <div class="dashboardArticles">Articles will be displayed here</div>
+        </div>
+        <!-- List Card dropdown -->
+        <div class="listTileDiv">
+          <div class="listTileContainer">
+            <div class="listDetailTile">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                viewBox="0 0 24 24"
+                id="listSelectedIcon"
+                class="listSelectedIcon"
+              >
+                <path
+                  fill="#034aa6"
+                  d="M12 16q1.671 0 2.836-1.164T16 12q0-1.671-1.164-2.836T12 8q-1.671 0-2.836 1.164T8 12q0 1.671 1.164 2.836T12 16m.003 5q-1.866 0-3.51-.708q-1.643-.709-2.859-1.924q-1.216-1.214-1.925-2.856Q3 13.87 3 12.003q0-1.866.708-3.51q.709-1.643 1.924-2.859q1.214-1.216 2.856-1.925Q10.13 3 11.997 3q1.866 0 3.51.708q1.643.709 2.859 1.924q1.216 1.214 1.925 2.856Q21 10.13 21 11.997q0 1.866-.708 3.51q-.709 1.643-1.924 2.859q-1.214 1.216-2.856 1.925Q13.87 21 12.003 21"
+                />
+              </svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                viewBox="0 0 24 24"
+                id="listNotSelectedIcon"
+                class="listNotSelectedIcon"
+              >
+                <path
+                  fill="none"
+                  stroke="rgba(95, 91, 91, 1)"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 4a8 8 0 1 0 0 16a8 8 0 0 0 0-16"
+                />
+              </svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.3em"
+                height="1.3em"
+                viewBox="0 0 2048 2048"
+                class="listTileFilter"
+              >
+                <path
+                  fill="rgba(128, 123, 123, 1)"
+                  d="M2048 384v128H512V384zM512 896h1536v128H512zm0 512h1536v128H512zM0 256h384v384H0zm128 256h128V384H128zM0 768h384v384H0zm128 256h128V896H128zM0 1280h384v384H0zm128 256h128v-128H128z"
+                />
+              </svg>
+              <span class="listTextElement">List</span>
+            </div>
+            <div class="listCardDetail">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                viewBox="0 0 24 24"
+                id="cardNotSelectedIcon"
+                class="cardNotSelectedIcon"
+              >
+                <path
+                  fill="none"
+                  stroke="rgba(95, 91, 91, 1)"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 4a8 8 0 1 0 0 16a8 8 0 0 0 0-16"
+                />
+              </svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                viewBox="0 0 24 24"
+                id="cardSelectedIcon"
+                class="cardSelectedIcon"
+              >
+                <path
+                  fill="#034aa6"
+                  d="M12 16q1.671 0 2.836-1.164T16 12q0-1.671-1.164-2.836T12 8q-1.671 0-2.836 1.164T8 12q0 1.671 1.164 2.836T12 16m.003 5q-1.866 0-3.51-.708q-1.643-.709-2.859-1.924q-1.216-1.214-1.925-2.856Q3 13.87 3 12.003q0-1.866.708-3.51q.709-1.643 1.924-2.859q1.214-1.216 2.856-1.925Q10.13 3 11.997 3q1.866 0 3.51.708q1.643.709 2.859 1.924q1.216 1.214 1.925 2.856Q21 10.13 21 11.997q0 1.866-.708 3.51q-.709 1.643-1.924 2.859q-1.214 1.216-2.856 1.925Q13.87 21 12.003 21"
+                />
+              </svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                viewBox="0 0 20 20"
+                class="cardImageIcon"
+              >
+                <path
+                  fill="rgba(95, 91, 91, 1)"
+                  d="M0 0h9v9H0zm2 2v5h5V2zm-2 9h9v9H0zm2 2v5h5v-5zm9-13h9v9h-9zm2 2v5h5V2zm-2 9h9v9h-9zm2 2v5h5v-5z"
+                />
+              </svg>
+              <span class="cardTextElement">Card</span>
+            </div>
+          </div>
+        </div>
+        <div class="recentNameSort">
+          <div class="recentNameSortContainer">
+            <div class="recentNameSortContainerRecent">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                viewBox="0 0 24 24"
+                id="listSelectedIcon"
+                class="selectedRecentIcon"
+              >
+                <path
+                  fill="#034aa6"
+                  d="M12 16q1.671 0 2.836-1.164T16 12q0-1.671-1.164-2.836T12 8q-1.671 0-2.836 1.164T8 12q0 1.671 1.164 2.836T12 16m.003 5q-1.866 0-3.51-.708q-1.643-.709-2.859-1.924q-1.216-1.214-1.925-2.856Q3 13.87 3 12.003q0-1.866.708-3.51q.709-1.643 1.924-2.859q1.214-1.216 2.856-1.925Q10.13 3 11.997 3q1.866 0 3.51.708q1.643.709 2.859 1.924q1.216 1.214 1.925 2.856Q21 10.13 21 11.997q0 1.866-.708 3.51q-.709 1.643-1.924 2.859q-1.214 1.216-2.856 1.925Q13.87 21 12.003 21"
+                />
+              </svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.6em"
+                height="1.6em"
+                viewBox="0 0 24 24"
+                id="listNotSelectedIcon"
+                class="recentIcon"
+              >
+                <path
+                  fill="none"
+                  stroke="rgba(95, 91, 91, 1)"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 4a8 8 0 1 0 0 16a8 8 0 0 0 0-16"
+                />
+              </svg>
+              <span class="recentNameSortContainerText">Recent</span>
+            </div>
+            <div class="recentNameSortContainerName">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                viewBox="0 0 24 24"
+                id="listSelectedIcon"
+                class="selectedRecentNameIcon"
+              >
+                <path
+                  fill="#034aa6"
+                  d="M12 16q1.671 0 2.836-1.164T16 12q0-1.671-1.164-2.836T12 8q-1.671 0-2.836 1.164T8 12q0 1.671 1.164 2.836T12 16m.003 5q-1.866 0-3.51-.708q-1.643-.709-2.859-1.924q-1.216-1.214-1.925-2.856Q3 13.87 3 12.003q0-1.866.708-3.51q.709-1.643 1.924-2.859q1.214-1.216 2.856-1.925Q10.13 3 11.997 3q1.866 0 3.51.708q1.643.709 2.859 1.924q1.216 1.214 1.925 2.856Q21 10.13 21 11.997q0 1.866-.708 3.51q-.709 1.643-1.924 2.859q-1.214 1.216-2.856 1.925Q13.87 21 12.003 21"
+                />
+              </svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.6em"
+                height="1.6em"
+                viewBox="0 0 24 24"
+                id="listNotSelectedIcon"
+                class="recentNameIcon"
+              >
+                <path
+                  fill="none"
+                  stroke="rgba(95, 91, 91, 1)"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 4a8 8 0 1 0 0 16a8 8 0 0 0 0-16"
+                />
+              </svg>
+
+              <span class="recentNameSortContainerNameText">Name</span>
+            </div>
+            <div class="recentNameSortContainerAZ">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                viewBox="0 0 24 24"
+                id="listSelectedIcon"
+                class="selectedRecentAZIcon"
+              >
+                <path
+                  fill="#034aa6"
+                  d="M12 16q1.671 0 2.836-1.164T16 12q0-1.671-1.164-2.836T12 8q-1.671 0-2.836 1.164T8 12q0 1.671 1.164 2.836T12 16m.003 5q-1.866 0-3.51-.708q-1.643-.709-2.859-1.924q-1.216-1.214-1.925-2.856Q3 13.87 3 12.003q0-1.866.708-3.51q.709-1.643 1.924-2.859q1.214-1.216 2.856-1.925Q10.13 3 11.997 3q1.866 0 3.51.708q1.643.709 2.859 1.924q1.216 1.214 1.925 2.856Q21 10.13 21 11.997q0 1.866-.708 3.51q-.709 1.643-1.924 2.859q-1.214 1.216-2.856 1.925Q13.87 21 12.003 21"
+                />
+              </svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1.6em"
+                height="1.6em"
+                viewBox="0 0 24 24"
+                id="listNotSelectedIcon"
+                class="recentAZIcon"
+              >
+                <path
+                  fill="none"
+                  stroke="rgba(95, 91, 91, 1)"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 4a8 8 0 1 0 0 16a8 8 0 0 0 0-16"
+                />
+              </svg>
+              <span class="recentNameSortContainerAZText">A-Z</span>
+            </div>
+          </div>
+        </div>
+        <!-- Delete Modal -->
+        <div class="deleteModal">
+          <span class="deleteModalWarnig">
+            Are you sure you want to delete this <br />
+            bookmark ?
+          </span>
+          <div class="deleteModalAction">
+            <button type="button" class="deleteModalActionNo">No</button>
+            <button type="button" class="deleteModalActionYes">Yes</button>
+          </div>
+        </div>
+      </div>
+      <div class="footer">
+        <div class="openTabHolder">
+          <span class="openTabText">Open in new tab</span>
+          <input type="checkbox" id="open-in-new-tab" checked />
+        </div>
+        <div class="copyright">
+          <span> © 2024 QuickSearch+ </span>
+        </div>
+        <div class="emptyDiv"></div>
+      </div>
+      <script src="popup.js"></script>
+    </div>
+  </body>
+</html>

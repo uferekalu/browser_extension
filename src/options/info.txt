@@ -1,0 +1,1 @@
+The options section is a user interface where users can change settings or preferences for the extension
